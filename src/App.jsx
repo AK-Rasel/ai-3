@@ -3,7 +3,15 @@ import { ToastContainer, toast } from "react-toastify";
 import { uploadAIVoice, generateAIVoice } from "./lib/upload";
 import { LoaderIcon } from "./components/Icons";
 import "react-toastify/dist/ReactToastify.css";
-
+import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+const s3 = new S3Client({
+  region: "auto",
+  endpoint: import.meta.env.VITE_R2_ENDPOINT,
+  credentials: {
+    accessKeyId: import.meta.env.VITE_R2_ACCESS_KEY_ID,
+    secretAccessKey: import.meta.env.VITE_R2_SECRET_ACCESS_KEY,
+  },
+});
 const PLAY = "PLAY";
 const STOP = "STOP";
 
@@ -117,6 +125,26 @@ function App() {
 
   const { status, loading } = state;
 
+  const [audioFiles, setAudioFiles] = useState([]);
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      const params = { Bucket: "zehadttsbucket" };
+      try {
+        const data = await s3.send(new ListObjectsV2Command(params));
+        const mp3Files = data.Contents.filter((file) =>
+          file.Key.endsWith(".mp3")
+        );
+        setAudioFiles(mp3Files); // Store files in state
+      } catch (error) {
+        console.error("Error fetching audio files:", error);
+      }
+    };
+
+    fetchFiles();
+  }, []);
+  console.log(audioFiles);
+
   return (
     <>
       <div className="min-h-screen grid place-items-center font-inter bg-gray-200">
@@ -141,6 +169,25 @@ function App() {
               </span>
             )}
           </button>
+        </div>
+
+        <div>
+          <h2>Uploaded Audio Files</h2>
+          <ul>
+            {audioFiles.map((file) => (
+              <li key={file.Key}>
+                {file.Key}
+                {/* Play button for each file */}
+                <audio controls>
+                  <source
+                    src={`${import.meta.env.VITE_R2_ENDPOINT}/${file.Key}`}
+                    type="audio/mpeg"
+                  />
+                  Your browser does not support the audio tag.
+                </audio>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       <ToastContainer autoClose={2000} />
