@@ -8,8 +8,8 @@ const s3 = new S3Client({
   region: "auto",
   endpoint: import.meta.env.VITE_R2_ENDPOINT,
   credentials: {
-    accessKeyId: import.meta.env.VITE_R2_ACCESS_ID,
-    secretAccessKey: import.meta.env.VITE_R2_SECRET_ACCESS,
+    accessKeyId: import.meta.env.R2_ACCESS_ID,
+    secretAccessKey: import.meta.env.R2_SECRET_ACCESS,
   },
 });
 const PLAY = "PLAY";
