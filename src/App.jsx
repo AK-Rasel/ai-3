@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 const s3 = new S3Client({
   region: "auto",
-  endpoint: import.meta.env.VITE_R2_ENDPOINT,
+  endpoint: import.meta.env.R2_ENDPOINT,
   credentials: {
     accessKeyId: import.meta.env.R2_ACCESS_ID,
     secretAccessKey: import.meta.env.R2_SECRET_ACCESS,
@@ -128,7 +128,7 @@ function App() {
 
   useEffect(() => {
     const fetchFiles = async () => {
-      const params = { Bucket: import.meta.env.VITE_R2_BUCKET_NAME };
+      const params = { Bucket: import.meta.env.R2_BUCKET_NAME };
       try {
         const data = await s3.send(new ListObjectsV2Command(params));
         const mp3Files = data.Contents.filter((file) =>
@@ -183,7 +183,7 @@ function App() {
                 {/* Play button for each file */}
                 {/* <audio controls>
                   <source
-                    src={`${import.meta.env.VITE_R2_ENDPOINT}/${file.Key}`}
+                    src={`${import.meta.env.R2_ENDPOINT}/${file.Key}`}
                     type="audio/mpeg"
                   />
                   Your browser does not support the audio tag.
@@ -191,9 +191,7 @@ function App() {
 
                 <audio
                   controls
-                  src={`${import.meta.env.VITE_PUBLIC_R2_BUCKET_URL}/${
-                    file.Key
-                  }`}
+                  src={`${import.meta.env.PUBLIC_R2_BUCKET_URL}/${file.Key}`}
                   type="audio/mpeg"
                 ></audio>
               </li>
