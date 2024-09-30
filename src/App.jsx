@@ -61,7 +61,6 @@ function App() {
   useEffect(() => {
     const processing = async () => {
       const { status } = state;
-
       if (status === PLAY) {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
@@ -129,7 +128,7 @@ function App() {
 
   useEffect(() => {
     const fetchFiles = async () => {
-      const params = { Bucket: "zehadttsbucket" };
+      const params = { Bucket: import.meta.env.VITE_R2_BUCKET_NAME };
       try {
         const data = await s3.send(new ListObjectsV2Command(params));
         const mp3Files = data.Contents.filter((file) =>
@@ -147,7 +146,7 @@ function App() {
 
   return (
     <>
-      <div className="min-h-screen grid place-items-center font-inter bg-gray-200">
+      <div className="min-h-screen grid place-items-center font-inter bg-gray-200 grid-cols-2">
         <div className="flex flex-col items-center justify-center">
           <h1 className="text-6xl mb-7 font-semibold text-purple-600">
             Text to Speech
@@ -172,19 +171,31 @@ function App() {
         </div>
 
         <div>
-          <h2>Uploaded Audio Files</h2>
+          <h2 className="text-center  font-semibold text-purple-600 text-4xl leading-relaxed">
+            Audio Files
+          </h2>
           <ul>
             {audioFiles.map((file) => (
               <li key={file.Key}>
-                {file.Key}
+                <p className="text-base uppercase leading-relaxed mt-2 mb-2">
+                  {file.Key}
+                </p>
                 {/* Play button for each file */}
-                <audio controls>
+                {/* <audio controls>
                   <source
                     src={`${import.meta.env.VITE_R2_ENDPOINT}/${file.Key}`}
                     type="audio/mpeg"
                   />
                   Your browser does not support the audio tag.
-                </audio>
+                </audio> */}
+
+                <audio
+                  controls
+                  src={`${import.meta.env.VITE_PUBLIC_R2_BUCKET_URL}/${
+                    file.Key
+                  }`}
+                  type="audio/mpeg"
+                ></audio>
               </li>
             ))}
           </ul>
