@@ -6,10 +6,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 const s3 = new S3Client({
   region: "auto",
-  endpoint: import.meta.env.R2_ENDPOINT,
+  endpoint: "https://6af071b1511c548a40558a625f777d9d.r2.cloudflarestorage.com",
   credentials: {
-    accessKeyId: import.meta.env.R2_ACCESS_ID,
-    secretAccessKey: import.meta.env.R2_SECRET_ACCESS,
+    accessKeyId: "df6594969e9b0b7dc119f56bf6855a96",
+    // accessKeyId: import.meta.env.VITE_R2_ACCESS_KEY_ID,
+    secretAccessKey:
+      "eceed6471d34ddcaf212e7e12c1476ed773168967a2ab3b3d5f79d031ba7661f",
   },
 });
 const PLAY = "PLAY";
@@ -128,7 +130,7 @@ function App() {
 
   useEffect(() => {
     const fetchFiles = async () => {
-      const params = { Bucket: import.meta.env.R2_BUCKET_NAME };
+      const params = { Bucket: "zehadttsbucket" };
       try {
         const data = await s3.send(new ListObjectsV2Command(params));
         const mp3Files = data.Contents.filter((file) =>
@@ -180,18 +182,10 @@ function App() {
                 <p className="text-base uppercase leading-relaxed mt-2 mb-2">
                   {file.Key}
                 </p>
-                {/* Play button for each file */}
-                {/* <audio controls>
-                  <source
-                    src={`${import.meta.env.R2_ENDPOINT}/${file.Key}`}
-                    type="audio/mpeg"
-                  />
-                  Your browser does not support the audio tag.
-                </audio> */}
 
                 <audio
                   controls
-                  src={`${import.meta.env.PUBLIC_R2_BUCKET_URL}/${file.Key}`}
+                  src={`https://pub-edbda39fe3fd46ef9d871f7e90ad3637.r2.dev/${file.Key}`}
                   type="audio/mpeg"
                 ></audio>
               </li>

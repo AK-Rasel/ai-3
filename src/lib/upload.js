@@ -7,10 +7,12 @@ import OpenAI from "openai";
 
 const s3 = new S3Client({
   region: "auto",
-  endpoint: import.meta.env.R2_ENDPOINT,
+  endpoint: "https://6af071b1511c548a40558a625f777d9d.r2.cloudflarestorage.com",
   credentials: {
-    accessKeyId: import.meta.env.R2_ACCESS_ID,
-    secretAccessKey: import.meta.env.R2_SECRET_ACCESS,
+    accessKeyId: "df6594969e9b0b7dc119f56bf6855a96",
+    // accessKeyId: import.meta.env.VITE_R2_ACCESS_KEY_ID,
+    secretAccessKey:
+      "eceed6471d34ddcaf212e7e12c1476ed773168967a2ab3b3d5f79d031ba7661f",
   },
 });
 
@@ -24,7 +26,7 @@ const myKeyWord = {
 const myKeyWordFindKeys = Object.keys(myKeyWord);
 
 const openai = new OpenAI({
-  apiKey: import.meta.env.OPENAI_API,
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
 });
 
@@ -65,7 +67,7 @@ export async function uploadAIVoice(file) {
 
   const audio = new File([blob], "audio.mp3", { type: blob.type });
   const params = {
-    Bucket: import.meta.env.R2_BUCKET_NAME,
+    Bucket: "zehadttsbucket",
   };
   // eslint-disable-next-line no-useless-catch
   try {
@@ -77,7 +79,7 @@ export async function uploadAIVoice(file) {
       if (!myKeyWordFindKeys.includes(keysSplit)) {
         console.log(myKeyWordFindKeys);
         const command = new PutObjectCommand({
-          Bucket: import.meta.env.R2_BUCKET_NAME,
+          Bucket: "zehadttsbucket",
           Key: a + ".mp3", // To Do letter ----------------------------------------------------------------------
           Body: audio,
           ContentType: "audio/mpeg",
